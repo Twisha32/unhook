@@ -99,11 +99,14 @@ jobs:
         run: docker compose --profile sandbox --profile ingest config -q
       - name: Build the images
         run: docker compose --profile sandbox build
+      - name: Pull the stock images
+        run: docker compose pull --quiet postgres redis
       - name: Bring up the core stack
         run: |
           if ! docker compose up -d --wait --wait-timeout 180 postgres redis api worker 2> up.err; then
             cat up.err
-            echo "::error title=docker compose up::$(tr '\n' ' ' < up.err | cut -c1-2500 | sed 's/%/%25/g')"
+            # The end of the output is where the reason is, so keep the tail.
+            echo "::error title=docker compose up::$(tail -n 20 up.err | tr '\n' ' ' | tail -c 2500 | sed 's/%/%25/g')"
             exit 1
           fi
       - name: Report a sample and read back the verdict
