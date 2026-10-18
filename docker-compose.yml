@@ -1,0 +1,128 @@
+# Core stack:      docker compose up --build
+# With sandbox:    docker compose --profile sandbox up --build   (and set UNHOOK_SANDBOX_URL in .env)
+# With mailbox:    docker compose --profile ingest up --build
+#
+# Networks, from the inside out:
+#   jail          internal. The sandbox and its egress proxy, nothing else.
+#   sandbox_link  internal. The worker may ask the sandbox to trace a link.
+#   outbound      the only network with a route to the internet. Only the proxy joins it.
+
+x-backend: &backend
+  build:
+    context: .
+    dockerfile: backend/Dockerfile
+    args:
+      EXTRAS: ${UNHOOK_BUILD_EXTRAS:-}
+  env_file:
+    - path: .env
+      required: false
+  environment: &backend-env
+    UNHOOK_DATABASE_URL: postgresql://unhook:${POSTGRES_PASSWORD:-unhook}@postgres:5432/unhook
+    UNHOOK_REDIS_URL: redis://redis:6379/0
+    UNHOOK_SANDBOX_URL: ${UNHOOK_SANDBOX_URL:-}
+  volumes:
+    - ./data:/app/data
+    - ./eval:/app/eval
+    - ./model:/app/model
+  restart: unless-stopped
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: unhook
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-unhook}
+      POSTGRES_DB: unhook
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unhook"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    <<: *backend
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    ports: ["8000:8000"]
+
+  worker:
+    <<: *backend
+    command: ["celery", "-A", "unhook.tasks.celery_app", "worker", "-Q", "unhook", "--loglevel=info"]
+    healthcheck: { disable: true }
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    networks: [default, sandbox_link]
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: dashboard/Dockerfile
+    depends_on: [api]
+    ports: ["8080:80"]
+    restart: unless-stopped
+
+  ingest:
+    <<: *backend
+    profiles: [ingest]
+    command: ["python", "-m", "unhook.ingest.imap"]
+    healthcheck: { disable: true }
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+
+  sandbox:
+    profiles: [sandbox]
+    build:
+      context: .
+      dockerfile: sandbox/Dockerfile
+      target: sandbox
+    environment:
+      UNHOOK_SANDBOX_PROXY: http://egress:3128
+      UNHOOK_SANDBOX_MODE: ${UNHOOK_SANDBOX_MODE:-http}
+    networks: [sandbox_link, jail]
+    read_only: true
+    tmpfs: ["/tmp:size=256m,mode=1777"]
+    shm_size: 256m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256
+    mem_limit: 1g
+    cpus: 1.0
+    depends_on: [egress]
+    restart: unless-stopped
+
+  egress:
+    profiles: [sandbox]
+    build:
+      context: .
+      dockerfile: sandbox/Dockerfile
+      target: proxy
+    networks: [jail, outbound]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+    mem_limit: 128m
+    restart: unless-stopped
+
+networks:
+  sandbox_link: { internal: true }
+  jail: { internal: true }
+  outbound: {}
+
+volumes:
+  pgdata:
