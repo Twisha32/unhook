@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+
+# Node
+node_modules/
+dashboard/dist/
+*.tsbuildinfo
+
+# Local state
+.env
+unhook.db
+*.sqlite3
+.DS_Store
+
+# Public corpora are fetched at run time and never committed (licences differ).
+/data/corpora/
+/data/*
+!/data/.gitkeep
+
+# Local evaluation output. CI publishes real reports to the eval-results branch.
+/eval/reports/*
+!/eval/reports/.gitkeep
+/model/*
+!/model/.gitkeep
