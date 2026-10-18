@@ -78,6 +78,13 @@ def test_safe_mail_is_auto_closed_and_gets_a_calm_reply(client):
     assert "didn't find anything wrong" in client.notifier.outbox[0][2]
 
 
+def test_safe_mail_stays_in_the_queue_when_auto_close_is_off(client, monkeypatch):
+    monkeypatch.setattr(get_settings(), "auto_close_safe", False)
+    submit(client, sample("10-staff-meeting.eml"))
+    case = client.get("/api/cases/1").json()
+    assert case["verdict"] == "likely_safe" and case["status"] == "open"
+
+
 def test_malicious_goes_to_the_blocklist_and_false_positive_takes_it_off(client):
     submit(client, sample("01-m365-password-expiry.eml"))
     assert "session-verify.example" in client.get("/api/blocklist/txt").text

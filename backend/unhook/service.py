@@ -69,7 +69,7 @@ def process_report(db: Session, report_id: str, services: Services | None = None
                 case.status = "open"
         else:
             analysis = analyze_message(msg, services, online=True)
-            case = _create_case(db, msg, analysis)
+            case = _create_case(db, msg, analysis, settings)
         report.case_id = case.id
         subject, body = employee_message(case.analysis, case.ref)
         report.verdict, report.reply_subject, report.reply_body = case.verdict, subject, body
@@ -91,7 +91,7 @@ def process_report(db: Session, report_id: str, services: Services | None = None
     return report
 
 
-def _create_case(db: Session, msg, analysis: dict) -> Case:
+def _create_case(db: Session, msg, analysis: dict, settings: Settings) -> Case:
     verdict = analysis["verdict"]
     top = analysis["findings"][0]["title"] if analysis["findings"] else ""
     case = Case(
@@ -101,7 +101,7 @@ def _create_case(db: Session, msg, analysis: dict) -> Case:
         sender_domain=msg.sender.domain,
         verdict=verdict["label"],
         score=verdict["score"],
-        status="auto_closed" if verdict["label"] == "likely_safe" else "open",
+        status="auto_closed" if verdict["label"] == "likely_safe" and settings.auto_close_safe else "open",
         top_finding=top,
         analysis=analysis,
     )

@@ -62,6 +62,10 @@ class Settings(BaseSettings):
     # Used by the dashboard's "analyst minutes saved" figure.
     manual_review_minutes: float = 8.0
 
+    # A "likely safe" verdict closes the case without an analyst ever seeing it, which is also
+    # where a missed phish disappears. Turn this off to keep every report in the queue.
+    auto_close_safe: bool = True
+
     @field_validator("cors_origins", "org_domains", "protected_names", mode="before")
     @classmethod
     def _csv(cls, value):
