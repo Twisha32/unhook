@@ -55,13 +55,39 @@ The report gives two time figures, and they mean different things:
 
 Because corpus prevalence isn't your prevalence, precision is recomputed at the assumed prevalence rather than read off the corpus.
 
+## The first real run
+
+Run 39086357674 on 17 October 2026, seed 7, default costs. 15,427 messages were read and 4,779 near-duplicates removed. The split was 6,699 train, 2,290 validation and 1,658 test (1,107 phishing and 551 legitimate). The blend weight chosen on validation was 0.75 model, with the queue threshold at 0.08 and the auto-block threshold at 0.67. The report is committed as [`eval/results/nazario-spamassassin.json`](../eval/results/nazario-spamassassin.json).
+
+| | Precision | Recall | False-positive rate |
+|---|---|---|---|
+| Review queue (score of 0.08 or more) | 73.6% on the test mix, 31.6% at 25% prevalence | 99.0% (95% CI 98.3 to 99.6) | 71.3% (CI 63.5 to 79.2) |
+| Auto-block (score of 0.67 or more) | 99.5% | 78.3% | 0.7% (4 of 551) |
+
+| Variant | AUC | Recall | False-positive rate | Missed per 1,000 | Net minutes saved per 1,000 |
+|---|---|---|---|---|---|
+| Rules only | 0.758 | 66.6% | 28.3% | 83.6 | -13,007 |
+| Model only | 0.972 | 99.1% | 73.9% | 2.3 | 5,342 |
+| Rules + model (shipped) | 0.973 | 99.0% | 71.3% | 2.5 | 5,377 |
+
+Where the flags landed: 99% of the Nazario phishing, 72% of the easy ham (528 messages) and 48% of the hard ham (only 23 messages survived de-duplication, so that figure is loose).
+
+What to take from it:
+
+- **The queue threshold is a cost decision.** With a miss priced at 240 minutes and a review at 3, the optimiser would rather flag nearly everything than miss one. That's the right answer to the question the cost model asks, and a poor experience for the person working the queue. The dashboard sliders show how quickly recall drops as the threshold rises. Choose a threshold from your own costs.
+- **The auto-block line is the strong result.** At 0.67, four of 551 legitimate messages would have been blocked, and nearly four in five phishing messages were caught without a human.
+- **The rules alone don't carry their weight here.** They miss a third of the phishing and flag more than a quarter of the legitimate mail, which under these costs is worse than not having them. Two rules drag: Reply-To mismatch (58 phishing hits against 117 legitimate, 33% precision, because mailing lists set Reply-To deliberately) and fake reply threads (33 against 39, 46%). The strongest rules were very precise: link text that disagrees with its destination (278 against 2), credential wording under pressure (185 against 1), display-name brand claims (110 against 0), failed SPF or DKIM (87 against 0) and raw-IP links (79 against 0).
+- **Some of that precision is the corpus.** Failed SPF or DKIM never fires on the legitimate mail because 2000s mailing-list archives mostly lack those headers, while the newer phishing carries them. A rule can look perfect for reasons that have nothing to do with phishing.
+- **Don't trust the model's 0.97 yet.** Era is the obvious shortcut for it to learn, and its largest weights include message length, URL length and the number of distinct link domains. Only mail from your own organisation can settle that.
+- **None of these rules were tuned on this split.** If you change a rule because of what it did here, rerun with a different `--seed` or a fresh sample, or the numbers stop being held out.
+
 ## Known weaknesses of these corpora
 
 The report prints these in its `limitations` list, and the dashboard shows them under the results.
 
 - The rules were written by people who have read these corpora, so rule recall on them is optimistic. Treat the first real numbers as an upper bound.
 - The public ham is old mailing-list traffic and the phishing is mostly bank and webmail lures. A model can learn that difference (HTML, link count, formatting) instead of learning "phishing". Be suspicious of strong model-only numbers.
-- Historical mail has no usable sender-authentication results, domain-age lookups, threat-intel hits or sandbox traces, so those signals aren't exercised here. They're a large part of what makes the live system better than the offline score suggests, and none of that is measured.
+- Historical mail has little usable sender-authentication data and no domain-age lookups, threat-intel hits or sandbox traces, so those signals are barely exercised here. They're a large part of what makes the live system better than the offline score suggests, and none of that is measured.
 - Public corpora age. Phishing in 2026 looks different from phishing in 2005.
 
 The most useful number you'll ever get comes from your own mail: run `unhook eval` with your own labelled reports once you have a few hundred.

@@ -15,7 +15,7 @@ Unhook is a phishing triage pipeline for organisations that get suspicious email
 
 It's built for the school district, clinic or small nonprofit where "the SOC" is one person who also fixes printers.
 
-**Live demo:** [twisha32.github.io/unhook](https://twisha32.github.io/unhook/) runs the real dashboard on synthetic data, so you can click through cases and move the cost sliders without installing anything.
+**Live demo:** [twisha32.github.io/unhook](https://twisha32.github.io/unhook/) runs the real dashboard on synthetic data, so you can click through cases and move the cost sliders without installing anything. The cases are synthetic; the Evaluation page shows the real run.
 
 <p align="center">
   <img src="docs/assets/screenshots/overview.png" alt="Overview dashboard" width="100%">
@@ -31,7 +31,7 @@ It's built for the school district, clinic or small nonprofit where "the SOC" is
    - Attachments: sniffed file type vs. the name it wears (`Invoice.pdf.exe`), Office macros via `oletools`, active PDFs, HTML smuggling, encrypted archives.
 3. **Checks the outside world passively.** Domain age over RDAP, URLhaus and MalwareBazaar lookups, and local feed files. None of these touch the suspicious link.
 4. **Scores it transparently.** 41 rules, each with a confidence, a plain-language lesson and a MITRE ATT&CK technique (T1566 and friends). A logistic-regression model adds a second opinion and explains exactly which features moved its score. Both are shown side by side so nobody has to take the number on faith.
-5. **Responds.** The reporter gets a verdict and a micro-lesson. Clearly malicious mail goes straight to the blocklist. Suspicious mail waits for an analyst. Clearly fine mail closes itself. Marking a case as a false positive takes its indicators off the blocklist again.
+5. **Responds.** The reporter gets a verdict and a micro-lesson. Clearly malicious mail goes straight to the blocklist. Suspicious mail waits for an analyst. Clearly fine mail closes itself, unless you switch that off. Marking a case as a false positive takes its indicators off the blocklist again.
 6. **Writes the case note.** Either a deterministic template or, optionally, an LLM. The LLM only sees numbered evidence extracted by the parser, and every claim it makes is checked against that evidence before anyone reads it. A draft that invents a domain, a number or an attack technique is thrown away and replaced by the template.
 
 <p align="center">
@@ -96,7 +96,7 @@ Add `--profile ingest` to poll a reporting mailbox, and `--profile sandbox` for 
 
 ## The numbers, and what they do and don't mean
 
-The evaluation harness is the part of this project I'd most like you to poke at.
+The evaluation harness is the part of this project most worth poking at.
 
 - **Held-out public data.** The real run trains and tests on the [Nazario phishing corpus](https://monkey.org/~jose/phishing/) (CC BY 4.0) against the [SpamAssassin](https://spamassassin.apache.org/old/publiccorpus/) ham sets. Both are downloaded at run time and never committed.
 - **No memorising a campaign.** Messages from the same sender domain always land in the same split, near-duplicates are collapsed, and a text filed as both phishing and legitimate is dropped as label noise. The model is fit on train, the blend and thresholds are chosen on validation, and every reported number comes from the test split.
@@ -104,16 +104,31 @@ The evaluation harness is the part of this project I'd most like you to poke at.
 - **Ablation and per-rule precision.** Rules only, model only, and the blend are reported separately, along with each rule's precision on the test data.
 - **A business model, not just a confusion matrix.** Errors are priced in analyst-minutes: a missed phish costs far more than a false alarm. The headline is `net minutes saved per 1,000 reports`, which subtracts the cost of mistakes. The "gross" figure (review time saved) is shown too, but it's the flattering one and it can make a tool that misses most phish look good. Every assumption is a slider in the dashboard, and the cost defaults are placeholders for a small organisation, not measurements.
 
-**Status of the numbers.** This repository ships no accuracy claim until the real corpora have been run. The demo dashboard is driven by a synthetic corpus the same author wrote the rules against, and says so in a banner on every evaluation screen. It proves the plumbing works, and tells you nothing about how Unhook does on real mail. To get real numbers:
+**What the first real run says.** The 17 October 2026 run read 15,427 messages and removed 4,779 near-duplicates. The test split is 1,107 phishing and 551 legitimate messages from senders the model never saw. The default cost assumptions apply, and the full report is in [`eval/results`](eval/results/nazario-spamassassin.json).
+
+| | Result |
+|---|---|
+| Auto-block threshold | 99.5% precision, 78% recall, 4 wrongful blocks among 551 legitimate messages |
+| Review-queue threshold | Catches 99.0% of phishing (95% CI 98.3 to 99.6%), but also flags 71% of legitimate mail (CI 63 to 79%). At 25% prevalence, about 32% of flagged mail is really phishing. |
+| Net analyst time | 5,377 minutes saved per 1,000 reports (6,055 gross), with 2.5 missed phish and 5.4 wrongful blocks per 1,000 |
+| Rules alone | AUC 0.76, 67% recall, 28% of legitimate mail flagged. Net **-13,007** minutes per 1,000, which under these costs is worse than triaging by hand. |
+| Model alone | AUC 0.97 |
+
+Read that with some suspicion, in both directions:
+
+- **The queue is noisy by design.** The cost model prices a missed phish at 240 minutes and a review at 3, so the optimiser flags almost everything. That's cheap in minutes and irritating for a person. Raise the threshold in the dashboard and watch recall fall.
+- **The rules are weak on this data.** They were written for modern lures, and an offline run on these archives has no domain-age or threat-intel lookups and little sender-authentication data, which many rules lean on. Two rules are plainly noisy on it: Reply-To mismatch (33% precision, because mailing lists set Reply-To on purpose) and fake reply threads (46%). They haven't been tuned against this test split, because that would spoil the split.
+- **The model's 0.97 probably flatters it.** The legitimate mail is from 2002 to 2005 and much of the phishing is newer, so a model can learn the era (formatting, HTML, link counts) instead of learning phishing. It hasn't been tested on current legitimate mail.
+- **So no trained model ships.** Out of the box Unhook runs on the rules alone, which is the weaker configuration above. Until you've evaluated it on your own labelled reports, consider `UNHOOK_AUTO_CLOSE_SAFE=false` so an analyst still sees everything the rules call safe.
+
+To reproduce or rerun:
 
 ```bash
 unhook corpora fetch --dest data/corpora
 unhook eval --corpus real --data data/corpora --out eval/reports/latest.json --write-model model/model.json
 ```
 
-or run **Evaluate on public corpora** from the Actions tab, which does the same on a GitHub runner and publishes the report and trained model to an `eval-results` branch. Details, including known weaknesses of those corpora, are in [docs/evaluation.md](docs/evaluation.md).
-
-No trained model is bundled. Until you train one, Unhook runs on the rules alone, and says so.
+or run **Evaluate on public corpora** from the Actions tab, which does the same on a GitHub runner and publishes the report and trained model to an `eval-results` branch. Method and corpus caveats are in [docs/evaluation.md](docs/evaluation.md).
 
 ## Safety
 
@@ -143,6 +158,7 @@ Everything is optional and set through environment variables (or `.env`). The fu
 | `UNHOOK_SMTP_*` | Where replies to reporters are sent from. Without it they're logged. |
 | `UNHOOK_IMAP_*` | The reporting mailbox for `--profile ingest`. |
 | `UNHOOK_CASE_NOTE_PROVIDER` | `template` (default, offline) or `anthropic`. Needs `UNHOOK_BUILD_EXTRAS=llm` and `ANTHROPIC_API_KEY`. |
+| `UNHOOK_AUTO_CLOSE_SAFE` | `true` (default) closes "likely safe" cases without an analyst. `false` keeps every report in the queue. |
 | `UNHOOK_MANUAL_REVIEW_MINUTES` | What reading one report by hand costs, for the time-saved figure. |
 
 ## API
@@ -187,7 +203,7 @@ Every rule has one message that must trigger it and one that must not, and a met
 ## Known limits
 
 - The IMAP poller is covered by a stubbed-connection test, not against a real mail server.
-- The Docker images and compose stack weren't run on the machine this was written on. CI builds them on every push, reports a sample through the running stack, and checks that the egress proxy refuses the cloud metadata address, so a green CI run is the evidence. The tracer, proxy and Chromium mode are also tested locally against local servers, never against live sites.
+- CI starts the full compose stack on every push, reports a sample through it, and checks that the egress proxy refuses the cloud metadata address. What hasn't been observed is the sandbox tracing real phishing sites, and the Chromium mode is only tested against local servers.
 - There's no database migration tooling yet. The schema is created on start-up, which is fine for a first deployment and not for upgrading one.
 - A rules engine written by the people reading the corpus will always flatter itself. Treat the first real numbers as an upper bound.
 - Email only. No SMS, no chat-app reports.
