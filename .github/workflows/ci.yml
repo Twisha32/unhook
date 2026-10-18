@@ -100,7 +100,12 @@ jobs:
       - name: Build the images
         run: docker compose --profile sandbox build
       - name: Bring up the core stack
-        run: docker compose up -d --wait --wait-timeout 180 postgres redis api worker
+        run: |
+          if ! docker compose up -d --wait --wait-timeout 180 postgres redis api worker 2> up.err; then
+            cat up.err
+            echo "::error title=docker compose up::$(tr '\n' ' ' < up.err | cut -c1-2500 | sed 's/%/%25/g')"
+            exit 1
+          fi
       - name: Report a sample and read back the verdict
         run: |
           id=$(curl -fsS -F "file=@samples/01-m365-password-expiry.eml" -F "reporter=ci@example.org" localhost:8000/api/reports | python3 -c 'import sys,json; print(json.load(sys.stdin)["id"])')
