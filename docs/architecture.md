@@ -61,4 +61,4 @@ React, Vite and TypeScript with no UI framework. Charts are hand-built SVG (scor
 - **Rules first, model second.** Rules are explainable and testable one at a time. The model catches combinations the rules don't name. Neither is trusted alone, and the ablation in the evaluation report shows what each adds.
 - **Offline features only.** The model never sees network-derived signals. That keeps it trainable on historical mail and keeps its behaviour reproducible.
 - **Defang at the edge.** Evidence is defanged when it's produced, not when it's displayed, so every consumer (dashboard, reply email, LLM prompt) gets the safe form.
-- **No migrations yet.** The schema is created on start-up. Add Alembic before the first schema change you can't afford to lose data in.
+- **No migrations yet.** The schema is created on start-up, under a Postgres advisory lock so the API, worker and mailbox poller can all boot at once on an empty database. Add Alembic before the first schema change you can't afford to lose data in.

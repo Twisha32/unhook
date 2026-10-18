@@ -12,6 +12,7 @@ from sqlalchemy import (
     Text,
     TypeDecorator,
     create_engine,
+    text,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, sessionmaker
@@ -110,6 +111,25 @@ class Indicator(Base):
 _engine = None
 _session_factory = None
 
+# Arbitrary, but the same in every process that shares a database.
+_SCHEMA_LOCK = 0x554E4B48
+
+
+def create_schema(engine) -> None:
+    """Create any missing tables.
+
+    The API, the worker and the mailbox poller all start together, and on a brand new
+    Postgres database they would each try to create the same tables at once. Postgres
+    doesn't make that safe (one of them dies with a duplicate-key error), so they take
+    turns on an advisory lock that is released when the transaction ends.
+    """
+    if engine.dialect.name == "postgresql":
+        with engine.begin() as conn:
+            conn.execute(text("SELECT pg_advisory_xact_lock(:key)"), {"key": _SCHEMA_LOCK})
+            Base.metadata.create_all(conn)
+    else:
+        Base.metadata.create_all(engine)
+
 
 def configure(url: str | None = None):
     """(Re)build the engine. Tests call this with an in-memory SQLite URL."""
@@ -124,7 +144,7 @@ def configure(url: str | None = None):
         url = url.replace("postgresql://", "postgresql+psycopg://", 1)
     _engine = create_engine(url, pool_pre_ping=True, **kwargs)
     _session_factory = sessionmaker(_engine, expire_on_commit=False)
-    Base.metadata.create_all(_engine)
+    create_schema(_engine)
     return _engine
 
 

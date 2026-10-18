@@ -20,6 +20,21 @@ jobs:
       fail-fast: false
       matrix:
         python: ["3.11", "3.12", "3.13"]
+    # A real Postgres for the few tests that only mean something there (tests/test_postgres.py).
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: unhook
+          POSTGRES_PASSWORD: unhook
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U unhook"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      UNHOOK_TEST_POSTGRES_URL: postgresql://unhook:unhook@localhost:5432/postgres
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -109,4 +124,9 @@ jobs:
           PY
       - name: Logs on failure
         if: failure()
-        run: docker compose --profile sandbox logs --no-color --tail=80
+        run: |
+          docker compose --profile sandbox ps -a
+          docker compose --profile sandbox logs --no-color --tail=80
+          # Repeat the tail as an annotation so it shows on the run summary without opening the raw log.
+          tail=$(docker compose --profile sandbox logs --no-color --tail=25 | tr '\n' ' ' | cut -c1-3000 | sed 's/%/%25/g')
+          echo "::error title=Container logs::${tail}"
