@@ -1,0 +1,37 @@
+From: "Ridgewood Communications" <news@ridgewood-usd.example>
+To: staff@ridgewood-usd.example
+Subject: This week at Ridgewood: schedules, lunch menus, and the fall concert
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <08-district-newsletter@mail.sample.invalid>
+Authentication-Results: mx.ridgewood-usd.example; spf=pass
+ smtp.mailfrom=ridgewood-usd.example; dkim=pass
+ header.d=ridgewood-usd.example; dmarc=pass (p=none)
+ header.from=ridgewood-usd.example
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============8691767068587020747=="
+
+--===============8691767068587020747==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Fall concert is Thursday at 6:30pm in the main gym. Lunch menus and the revis=
+ed bus schedule are linked below.
+
+Read more: https://u1234.ct.sendgrid.net/ls/click?upn=3Dabc123
+
+--===============8691767068587020747==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<h2>This week at Ridgewood</h2><p>Fall concert is Thursday at 6:30pm in the m=
+ain gym.</p><p><a href=3D"https://u1234.ct.sendgrid.net/ls/click?upn=3Dabc123=
+">Read the full newsletter</a></p><p style=3D"display:none">Preheader text fo=
+r inbox previews: lunch menus, bus routes and the concert.</p>
+
+--===============8691767068587020747==--

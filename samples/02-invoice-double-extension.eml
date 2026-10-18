@@ -1,0 +1,38 @@
+From: "Accounts Receivable" <billing@northfield-logistics.example>
+To: staff@ridgewood-usd.example
+Subject: Invoice 4471 - payment overdue
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <02-invoice-double-extension@mail.sample.invalid>
+Authentication-Results: mx.ridgewood-usd.example; spf=pass
+ smtp.mailfrom=northfield-logistics.example; dkim=pass
+ header.d=northfield-logistics.example; dmarc=pass (p=none)
+ header.from=northfield-logistics.example
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0465215768376642224=="
+
+--===============0465215768376642224==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+Please find invoice 4471 attached. Payment is overdue, please remit today to =
+avoid a late fee.
+
+Regards,
+Accounts Receivable
+
+--===============0465215768376642224==
+Content-Type: application/octet-stream
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="Invoice_4471.pdf.exe"
+MIME-Version: 1.0
+
+TVqQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQ
+AJAAkACQAJAAaGFybWxlc3MgZmlsbGVyLCBub3QgZXhlY3V0YWJsZQ==
+
+--===============0465215768376642224==--

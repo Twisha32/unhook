@@ -1,0 +1,17 @@
+From: "Internal Revenue Service" <refunds@irs.gov>
+To: staff@ridgewood-usd.example
+Subject: Your tax refund is ready - claim within 24 hours
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <15-irs-spoofed-sender@mail.sample.invalid>
+Authentication-Results: mx.ridgewood-usd.example; spf=fail
+ smtp.mailfrom=irs.gov; dkim=none; dmarc=fail (p=reject) header.from=irs.gov
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+You are eligible for a refund. Claim it within 24 hours or it will be forfeit=
+ed: https://irs-refund-claim.example/start

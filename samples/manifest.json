@@ -1,0 +1,114 @@
+{
+  "org": {
+    "domains": [
+      "ridgewood-usd.example"
+    ],
+    "protected_names": [
+      "Elaine Whitfield"
+    ]
+  },
+  "samples": [
+    {
+      "file": "01-m365-password-expiry.eml",
+      "label": "phish",
+      "expect": "malicious",
+      "summary": "Credential lure from a lookalike of Microsoft's domain. Passes its own SPF/DKIM, because attackers authenticate the domains they own."
+    },
+    {
+      "file": "02-invoice-double-extension.eml",
+      "label": "phish",
+      "expect": "malicious",
+      "summary": "Vendor invoice that is really a program named like a PDF."
+    },
+    {
+      "file": "03-superintendent-gift-cards.eml",
+      "label": "phish",
+      "expect": "malicious",
+      "summary": "Classic executive impersonation from a free mailbox, asking for gift cards."
+    },
+    {
+      "file": "04-docusign-html-attachment.eml",
+      "label": "phish",
+      "expect": "malicious",
+      "summary": "A 'document to review' that is an HTML file opened from disk, from a sender that has nothing to do with DocuSign."
+    },
+    {
+      "file": "05-hr-payroll-lookalike.eml",
+      "label": "phish",
+      "expect": "suspicious",
+      "summary": "Direct-deposit change request from a domain that wraps the district's own name."
+    },
+    {
+      "file": "06-parcel-ip-link.eml",
+      "label": "phish",
+      "expect": "malicious",
+      "summary": "Missed-delivery notice linking to a bare IP address (a documentation address, not a real host)."
+    },
+    {
+      "file": "07-qr-mfa-reset.eml",
+      "label": "phish",
+      "expect": "suspicious",
+      "summary": "Short message pushing a QR code, which hides the destination from link scanners."
+    },
+    {
+      "file": "08-district-newsletter.eml",
+      "label": "legit",
+      "expect": "likely_safe",
+      "summary": "Ordinary newsletter with click-tracking links through an email service provider."
+    },
+    {
+      "file": "09-docusign-genuine.eml",
+      "label": "legit",
+      "expect": "likely_safe",
+      "summary": "A real DocuSign envelope, to prove that review-and-sign language alone isn't flagged."
+    },
+    {
+      "file": "10-staff-meeting.eml",
+      "label": "legit",
+      "expect": "likely_safe",
+      "summary": "Internal scheduling email between colleagues."
+    },
+    {
+      "file": "11-wrapped-link-lookalike.eml",
+      "label": "phish",
+      "expect": "malicious",
+      "summary": "Reported through a gateway that wrapped the link in Proofpoint URL Defense. The real destination is a PayPal lookalike."
+    },
+    {
+      "file": "12-sharepoint-colleague.eml",
+      "label": "legit",
+      "expect": "likely_safe",
+      "summary": "A colleague sharing a file from SharePoint. Hard negative: the link is on microsoft infrastructure."
+    },
+    {
+      "file": "13-homoglyph-apple-id.eml",
+      "label": "phish",
+      "expect": "malicious",
+      "summary": "Sender domain swaps a Latin 'a' for a Cyrillic one (xn--pple-43d.example)."
+    },
+    {
+      "file": "14-encrypted-zip.eml",
+      "label": "phish",
+      "expect": "suspicious",
+      "summary": "Password-protected archive with the password in the body, a way around attachment scanners."
+    },
+    {
+      "file": "15-irs-spoofed-sender.eml",
+      "label": "phish",
+      "expect": "malicious",
+      "summary": "Spoofs the IRS domain outright. Fails DMARC against a reject policy."
+    },
+    {
+      "file": "16-vendor-bank-change.eml",
+      "label": "phish",
+      "expect": "suspicious",
+      "summary": "Vendor asking to change bank details, with replies routed to a free mailbox."
+    },
+    {
+      "file": "17-it-password-reminder.eml",
+      "label": "legit",
+      "expect": "likely_safe",
+      "summary": "Genuine internal reminder about password expiry that links to the district's own single sign-on."
+    }
+  ]
+}

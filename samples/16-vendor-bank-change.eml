@@ -1,0 +1,25 @@
+From: "Acme Supplies Billing" <billing@acme-supplies.example>
+To: staff@ridgewood-usd.example
+Subject: Updated remittance details for invoice 88213
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <16-vendor-bank-change@mail.sample.invalid>
+Reply-To: acme.billing.dept@gmail.com
+Authentication-Results: mx.ridgewood-usd.example; spf=pass
+ smtp.mailfrom=acme-supplies.example; dkim=pass
+ header.d=acme-supplies.example; dmarc=pass (p=none)
+ header.from=acme-supplies.example
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Hello,
+
+Our bank account has changed. Please update your records and send the next re=
+mittance for invoice 88213 to the new account in the attached details. Reply =
+to this address to confirm.
+
+Acme Supplies

@@ -1,0 +1,35 @@
+From: "Legal Department" <notices@counsel-notice-desk.example>
+To: staff@ridgewood-usd.example
+Subject: Document package - password inside
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <14-encrypted-zip@mail.sample.invalid>
+Authentication-Results: mx.ridgewood-usd.example; spf=pass
+ smtp.mailfrom=counsel-notice-desk.example; dkim=pass
+ header.d=counsel-notice-desk.example; dmarc=pass (p=none)
+ header.from=counsel-notice-desk.example
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8127371853602584699=="
+
+--===============8127371853602584699==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Please open the attached archive for the document package. The password is 44=
+71.
+
+--===============8127371853602584699==
+Content-Type: application/zip
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="Document_Package.zip"
+MIME-Version: 1.0
+
+UEsDBBQAAQAAAAAAIQCBoSd2JQAAACUAAAATAAAAUGF5bWVudF9EZXRhaWxzLnR4dGZpbGxlciBi
+eXRlcywgbm90IGFjdHVhbGx5IGVuY3J5cHRlZApQSwECFAMUAAEAAAAAACEAgaEndiUAAAAlAAAA
+EwAAAAAAAAAAAAAAgAEAAAAAUGF5bWVudF9EZXRhaWxzLnR4dFBLBQYAAAAAAQABAEEAAABWAAAA
+AAA=
+
+--===============8127371853602584699==--

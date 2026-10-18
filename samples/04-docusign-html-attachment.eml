@@ -1,0 +1,33 @@
+From: "DocuSign" <dse@docusign-review-center.example>
+To: staff@ridgewood-usd.example
+Subject: Completed: Please review and sign - Q4 Contract
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <04-docusign-html-attachment@mail.sample.invalid>
+Authentication-Results: mx.ridgewood-usd.example; spf=pass
+ smtp.mailfrom=docusign-review-center.example; dkim=pass
+ header.d=docusign-review-center.example; dmarc=pass (p=none)
+ header.from=docusign-review-center.example
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8956403183343451631=="
+
+--===============8956403183343451631==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+A document has been shared with you via DocuSign. Open the attached file to r=
+eview and sign.
+
+--===============8956403183343451631==
+Content-Type: text/html
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="Contract_Q4_Review.html"
+MIME-Version: 1.0
+
+PGh0bWw+PGJvZHk+PHA+TG9hZGluZyBzZWN1cmUgZG9jdW1lbnQuLi48L3A+PHNjcmlwdD4vKiBz
+dHViICovPC9zY3JpcHQ+PC9ib2R5PjwvaHRtbD4=
+
+--===============8956403183343451631==--

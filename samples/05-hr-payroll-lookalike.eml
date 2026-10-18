@@ -1,0 +1,25 @@
+From: "HR Payroll" <payroll@ridgewood-usd-hr.example>
+To: staff@ridgewood-usd.example
+Subject: Action needed: confirm your direct deposit details
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <05-hr-payroll-lookalike@mail.sample.invalid>
+Authentication-Results: mx.ridgewood-usd.example; spf=pass
+ smtp.mailfrom=ridgewood-usd-hr.example; dkim=pass
+ header.d=ridgewood-usd-hr.example; dmarc=pass (p=none)
+ header.from=ridgewood-usd-hr.example
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dear employee,
+
+We are updating payroll records. Please confirm your direct deposit details b=
+efore Friday using the secure form below.
+
+https://ridgewood-usd-hr.example/payroll/confirm
+
+Human Resources

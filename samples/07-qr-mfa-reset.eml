@@ -1,0 +1,50 @@
+From: "IT Service Desk" <servicedesk@it-helpdesk-alerts.example>
+To: staff@ridgewood-usd.example
+Subject: MFA reset required
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <07-qr-mfa-reset@mail.sample.invalid>
+Authentication-Results: mx.ridgewood-usd.example; spf=pass
+ smtp.mailfrom=it-helpdesk-alerts.example; dkim=pass
+ header.d=it-helpdesk-alerts.example; dmarc=pass (p=none)
+ header.from=it-helpdesk-alerts.example
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============6168570682930509815=="
+
+--===============6168570682930509815==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Your multi-factor authentication token has expired. Scan the QR code in this =
+message to re-enroll within 24 hours.
+
+--===============6168570682930509815==
+MIME-Version: 1.0
+Content-Type: multipart/related;
+ boundary="===============7014455246040425054=="
+
+--===============7014455246040425054==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+<p>Your multi-factor authentication token has expired.</p><p>Scan the QR code=
+ below to re-enroll within 24 hours.</p><img src=3D"cid:qr1" alt=3D"QR code" =
+width=3D"160" height=3D"160">
+
+--===============7014455246040425054==
+Content-Type: image/png
+Content-Transfer-Encoding: base64
+Content-ID: <qr1>
+MIME-Version: 1.0
+Content-Disposition: inline
+
+iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNg+M/A8B8ABQACAaX2
+RUAAAAAASUVORK5CYII=
+
+--===============7014455246040425054==--
+
+--===============6168570682930509815==--

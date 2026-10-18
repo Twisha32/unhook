@@ -1,0 +1,18 @@
+From: "Apple ID" <appleid@xn--pple-43d.example>
+To: staff@ridgewood-usd.example
+Subject: Your Apple ID has been locked
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <13-homoglyph-apple-id@mail.sample.invalid>
+Authentication-Results: mx.ridgewood-usd.example; spf=pass
+ smtp.mailfrom=xn--pple-43d.example; dkim=pass header.d=xn--pple-43d.example;
+ dmarc=pass (p=none) header.from=xn--pple-43d.example
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Your Apple ID was locked for security reasons. Verify your account to unlock =
+it: https://xn--pple-43d.example/unlock

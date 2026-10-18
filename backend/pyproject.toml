@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unhook"
+version = "0.1.0"
+description = "Phishing triage for teams that don't have a SOC"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "sqlalchemy>=2.0",
+    "psycopg[binary]>=3.1",
+    "celery[redis]>=5.4",
+    "httpx>=0.27",
+    "tldextract>=5.1",
+    "oletools>=0.60",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+    "scikit-learn>=1.4",
+    "numpy>=1.26",
+    "python-multipart>=0.0.9",
+    "pydantic-settings>=2.2",
+]
+
+[project.optional-dependencies]
+llm = ["anthropic>=0.40"]
+dev = ["pytest>=8", "pytest-asyncio>=0.23", "ruff>=0.5"]
+
+[project.scripts]
+unhook = "unhook.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["unhook*"]
+
+[tool.setuptools.package-data]
+unhook = ["data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+asyncio_mode = "auto"
+filterwarnings = ["ignore::DeprecationWarning:oletools.*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.File"]

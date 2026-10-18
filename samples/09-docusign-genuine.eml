@@ -1,0 +1,33 @@
+From: "DocuSign" <dse_na3@docusign.net>
+To: staff@ridgewood-usd.example
+Subject: Please review and sign: Facilities Services Agreement
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <09-docusign-genuine@mail.sample.invalid>
+Authentication-Results: mx.ridgewood-usd.example; spf=pass
+ smtp.mailfrom=docusign.net; dkim=pass header.d=docusign.net; dmarc=pass
+ (p=none) header.from=docusign.net
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============3632432651261639710=="
+
+--===============3632432651261639710==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Jordan Lee sent you a document to review and sign.
+
+Review document: https://na3.docusign.net/Signing/EmailStart.aspx?a=1f2e3d
+
+--===============3632432651261639710==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<p>Jordan Lee sent you a document to review and sign.</p><p><a href=3D"https:=
+//na3.docusign.net/Signing/EmailStart.aspx?a=3D1f2e3d">REVIEW DOCUMENT</a></p>
+
+--===============3632432651261639710==--

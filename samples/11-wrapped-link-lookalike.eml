@@ -1,0 +1,35 @@
+From: "PayPal Service" <service@paypa1-secure.example>
+To: staff@ridgewood-usd.example
+Subject: We've limited your account
+Date: Mon, 12 Oct 2026 09:14:22 -0500
+Message-ID: <11-wrapped-link-lookalike@mail.sample.invalid>
+Authentication-Results: mx.ridgewood-usd.example; spf=pass
+ smtp.mailfrom=paypa1-secure.example; dkim=pass
+ header.d=paypa1-secure.example; dmarc=pass (p=none)
+ header.from=paypa1-secure.example
+Received: from relay0.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+Received: from relay1.sample.invalid by mx.ridgewood-usd.example with ESMTPS;
+ Mon, 12 Oct 2026 09:14:22 -0500
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============1575307052775609129=="
+
+--===============1575307052775609129==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+We noticed unusual activity and limited your PayPal account. Confirm your ide=
+ntity to restore access: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3=
+A__paypa1-2Dsecure.example_confirm&d=3DDwMFaQ&c=3Dabc
+
+--===============1575307052775609129==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<p>We noticed unusual activity and limited your PayPal account.</p><p><a href=
+=3D"https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__paypa1-2Dsecure.ex=
+ample_confirm&amp;d=3DDwMFaQ&amp;c=3Dabc">Confirm your identity</a></p>
+
+--===============1575307052775609129==--
