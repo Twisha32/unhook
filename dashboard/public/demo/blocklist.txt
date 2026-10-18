@@ -1,4 +1,4 @@
-# Unhook domain blocklist, generated 2026-10-18T00:01:51Z
+# Unhook domain blocklist, generated 2026-10-18T01:42:27Z
 account-chase.example
 amazon-verify.example
 amazon906.web.app

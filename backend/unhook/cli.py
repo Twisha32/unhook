@@ -133,7 +133,7 @@ def cmd_notes_check(args):
 def cmd_demo(args):
     from .demo import build_demo
 
-    build_demo(Path(args.out), Path(args.samples))
+    build_demo(Path(args.out), Path(args.samples), eval_report=Path(args.eval_report) if args.eval_report else None)
 
 
 def main(argv=None):
@@ -180,6 +180,7 @@ def main(argv=None):
     p = sub.add_parser("demo-data", help="build the static data the dashboard demo runs on")
     p.add_argument("--out", default="dashboard/public/demo")
     p.add_argument("--samples", default="samples")
+    p.add_argument("--eval-report", help="show this evaluation report (say, a real-corpus run) instead of the synthetic one")
     p.set_defaults(fn=cmd_demo)
 
     args = parser.parse_args(argv)

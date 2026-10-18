@@ -11,7 +11,7 @@ help:
 	@echo "make samples      check the sample messages against their expected verdicts"
 	@echo "make notes-check  confirm the case-note checker catches seeded fabrications"
 	@echo "make eval-demo    evaluate on the synthetic corpus (plumbing check, not a benchmark)"
-	@echo "make demo-data    rebuild the JSON the dashboard demo runs on"
+	@echo "make demo-data    rebuild the JSON the dashboard demo runs on (shows the published real-corpus evaluation)"
 	@echo "make dashboard    install and build the dashboard"
 	@echo "make dev-api      API on :8000 with inline tasks (no Redis, no Postgres)"
 	@echo "make up / down    the full Docker stack"
@@ -36,7 +36,7 @@ eval-demo:
 	$(BIN)/unhook eval --out eval/reports/latest.json --write-model model/model.json
 
 demo-data:
-	$(BIN)/unhook demo-data --out dashboard/public/demo
+	$(BIN)/unhook demo-data --out dashboard/public/demo --eval-report eval/results/nazario-spamassassin.json
 
 dashboard:
 	cd dashboard && npm ci && npm run build

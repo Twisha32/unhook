@@ -40,7 +40,8 @@ def _stamp(rng: random.Random, now: datetime, bias_recent: bool = True) -> datet
     return when.replace(hour=rng.randint(7, 16), minute=rng.randint(0, 59), second=rng.randint(0, 59), microsecond=0)
 
 
-def build_demo(out: Path, samples_dir: Path, extra_phish: int = 70, extra_ham: int = 90, seed: int = 21) -> None:
+def build_demo(out: Path, samples_dir: Path, extra_phish: int = 70, extra_ham: int = 90, seed: int = 21,
+               eval_report: Path | None = None) -> None:
     rng = random.Random(seed)
     out = Path(out)
     (out / "cases").mkdir(parents=True, exist_ok=True)
@@ -52,6 +53,10 @@ def build_demo(out: Path, samples_dir: Path, extra_phish: int = 70, extra_ham: i
     meta = {"name": "Synthetic smoke corpus (demo)", "kind": "synthetic",
             "sources": [{"name": "generator", "label": "mixed", "count": 1200}]}
     report, model = evaluate_corpus(corpus.synthetic(500, 700, seed=7), CostModel(), corpus_meta=meta, workers=1, log=lambda *_: None)
+    if eval_report is not None:
+        # The demo cases are still scored by the synthetic-trained model above, but the Evaluation
+        # page can show a real run instead, for example the one published from the eval workflow.
+        report = json.loads(Path(eval_report).read_text())
     services = offline_services(model, org["domains"])
     services.protected_names = org["protected_names"]
     settings = Settings(org_domains=org["domains"], protected_names=org["protected_names"], case_note_provider="template")

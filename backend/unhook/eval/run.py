@@ -55,7 +55,7 @@ LIMITATIONS = [
     "The public ham is old mailing-list traffic and the phishing is mostly bank and webmail lures. "
     "The model can learn that difference (HTML, link count, formatting) instead of 'phishing'. Treat the model-only numbers with suspicion.",
     "Corpus prevalence is not your prevalence. Precision is recomputed at the assumed prevalence in the cost model.",
-    "Sender authentication, domain age, threat-intel and sandbox signals are absent from historical mail, so they are not exercised here.",
+    "Historical mail has little sender-authentication data, and domain-age, threat-intel and sandbox signals can't be reproduced offline, so those are barely exercised here.",
 ]
 
 

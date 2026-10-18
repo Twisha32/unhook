@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { BarList, CurveChart, ScoreHistogram } from "../components/charts";
 import { Icon } from "../components/Icons";
 import { Chip, ErrorState, PageHeader, PageSkeleton, Panel } from "../components/ui";
-import { api } from "../lib/api";
+import { api, currentMode } from "../lib/api";
 import { economics, flagMetrics, split } from "../lib/economics";
 import { fmtInt, fmtMinutes, fmtPct, GROUP_LABEL } from "../lib/format";
 import { useAsync } from "../lib/hooks";
@@ -75,8 +75,8 @@ function Loaded({ r }: { r: EvalReport }) {
     <div className="page">
       <PageHeader title="Evaluation" sub="Precision, recall and false-positive rate on a held-out test split, plus what the errors cost in analyst minutes." />
 
-      <div className={`banner ${synthetic ? "banner-warn" : "banner-ok"}`}>
-        <Icon name={synthetic ? "info" : "check"} size={18} />
+      <div className={`banner ${synthetic ? "banner-warn" : ""}`}>
+        <Icon name="info" size={18} />
         <div>
           {synthetic ? (
             <>
@@ -84,7 +84,8 @@ function Loaded({ r }: { r: EvalReport }) {
             </>
           ) : (
             <>
-              <strong>Measured on {r.corpus.name}.</strong> Test split only; the model and thresholds never saw it. Sources: {r.corpus.sources.map((s) => `${s.name} (${fmtInt(s.count)})`).join(", ")}.
+              <strong>Measured on {r.corpus.name}.</strong> Test split only; the model and thresholds never saw it. These archives are old, and an offline run has no domain-age or threat-intel lookups and little sender-authentication data, so read the limitations at the bottom before quoting a number.
+              {currentMode() === "demo" && " The cases and overview elsewhere in this demo are synthetic."}
             </>
           )}
         </div>
