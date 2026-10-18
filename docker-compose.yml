@@ -61,7 +61,13 @@ services:
   worker:
     <<: *backend
     command: ["celery", "-A", "unhook.tasks.celery_app", "worker", "-Q", "unhook", "--loglevel=info"]
-    healthcheck: { disable: true }
+    healthcheck:
+      # Asks this worker, by name, whether it is alive and answering.
+      test: ["CMD-SHELL", "celery -A unhook.tasks.celery_app inspect ping -d celery@$$HOSTNAME -t 5"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -102,7 +108,14 @@ services:
     pids_limit: 256
     mem_limit: 1g
     cpus: 1.0
-    depends_on: [egress]
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8080/healthz', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      egress: { condition: service_healthy }
     restart: unless-stopped
 
   egress:
@@ -117,6 +130,12 @@ services:
     security_opt: ["no-new-privileges:true"]
     pids_limit: 128
     mem_limit: 128m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 3128), 3).close()"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
     restart: unless-stopped
 
 networks:
