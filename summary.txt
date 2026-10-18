@@ -1,0 +1,12 @@
+analysed 15427 messages in 48s
+corpus: Nazario phishing corpus + SpamAssassin ham (real), test split {'phish': 1107, 'ham': 551}
+operating point: alpha=0.75, suspicious>=0.08, malicious>=0.67
+flag precision 0.736 (0.6456, 0.8131)  recall 0.990 (0.9832, 0.996)  FPR 0.713 (0.6345, 0.7919)
+AUC 0.973   PR-AUC 0.988   precision at 25% prevalence 0.316
+per 1,000 reports: 5377 analyst-minutes saved net of mistakes (6055 gross), 2.5 phish missed, 5.4 false blocks
+  Rules only                   AUC 0.758  recall 0.666  FPR 0.283  net saved/1000 -13007  missed/1000 83.6
+  Model only                   AUC 0.972  recall 0.991  FPR 0.739  net saved/1000 5342  missed/1000 2.3
+  Rules + model (shipped)      AUC 0.973  recall 0.990  FPR 0.713  net saved/1000 5377  missed/1000 2.5
+
+report written to out/report.json
+model written to out/model.json
